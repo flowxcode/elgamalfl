@@ -1,5 +1,6 @@
 """Console script for elgamalfl."""
 import argparse
+from elgamalfl import ElKey
 import sys
 
 
@@ -10,8 +11,23 @@ def main():
     args = parser.parse_args()
 
     print("Arguments: " + str(args._))
-    print("Replace this message by putting your code into "
-          "elgamalfl.cli.main")
+    # print("Replace this message by putting your code into "
+    #       "elgamalfl.cli.main")
+
+
+    key = ElKey("testname")
+
+    # generate properties for elgamal
+    print(key)
+    print(vars(key))
+
+
+
+
+
+
+
+
     return 0
 
 

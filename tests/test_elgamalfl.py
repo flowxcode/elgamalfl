@@ -11,6 +11,23 @@ from elgamalfl import elgamalfl
 class TestElgamalfl(unittest.TestCase):
     """Tests for `elgamalfl` package."""
 
+    def test_p(self):
+        p = elgamalfl.generate_p()
+        self.assertGreater(p, 0)
+
+    def test_g(self):
+        x = elgamalfl.generate_g()
+        self.assertGreater(x, 0)
+
+    def test_h(self):
+        x = elgamalfl.calc_h()
+        self.assertGreater(x, 0)
+
+    def test_x(self):
+        x = elgamalfl.generate_x()
+        self.assertGreater(x, 0)
+
+
     def setUp(self):
         """Set up test fixtures, if any."""
 
