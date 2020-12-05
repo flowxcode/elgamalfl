@@ -4,28 +4,35 @@
 
 import sys
 
-from sage.all import *
+import random 
+from math import pow
+from math import gcd
 
+# ------------------------------------------------------------------ #
+# helper
+def cust_gcd(a, b):
+    print("custom gcd")
+    if a < b:
+        return gcd(b, a)
+    elif a % b == 0:
+        return b
+    else:
+        return gcd(b, a % b)
+# ------------------------------------------------------------------ #
+
+
+# prime number
 def generate_p():
-    smoothest = 2^30 # just something large
-    for p in primes(2^24, 2^25):
-        smoothness = 0
-        for f, e in (p - 1).factor():
-            if e != 1:
-                smoothness = 2^30
-                break
-            smoothness += f
-        if smoothness < smoothest:
-            smooth = p
-            smoothest = smoothness
-        print(smooth, smooth - 1, (smooth - 1).factor())
-
-    p = sagemath.random_prime(2^8-1, False, 2^7)
-    return p
+	key = random.randint(pow(10, 10), pow(10, 20)) # randint between 10tothe10 and 20
+	return key
 
 
-def generate_g():
+def generate_g(p):
+    key = random.randint(pow(10, 10), pow(10, 20)) # randint between 10tothe10 and 20
+    while gcd(p, key) != 1:
+        key = random.randint(pow(10, 20), q)
     return 2
+
 
 
 def generate_x():
@@ -43,7 +50,7 @@ class ElKey:
         self.tricks = []    # creates a new empty list for each spec par
 
         self.p = generate_p()
-        self.g = generate_g()
+        self.g = generate_g(self.p)
         self.h = calc_h()
         self.x = generate_x()
 
