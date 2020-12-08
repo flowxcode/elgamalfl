@@ -3,41 +3,39 @@ import argparse
 from elgamalfl import ElKey
 import sys
 
-from pwn import *
+# from pwn import *
+import pwn
 
 def main():
-    """Console script for elgamalfl."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument('_', nargs='*')
-    args = parser.parse_args()
+    r = pwn.remote("webshop2.chals.fuzzy.land", 5209) # connect to the service
+    
+    response = r.recvuntil("Name: ").decode("utf-8") # input
+    pwn.log.info("response: " + response)
+    r.sendline("snahx")
 
-    print("Arguments: " + str(args._))
-    # print("Replace this message by putting your code into "
-    #       "elgamalfl.cli.main")
+    print("logged on")
 
-
-
-    r = remote("webshop2.chals.fuzzy.land", 5209) # connect to the service
     r.recvuntil("============\n") # receive (and discard) all of the intro text including the ====
-    text = r.recvuntil("============\n") # receive and save the ciphertext
-    text = text.decode("utf-8") # we received raw bytes, interpret it as utf-8 text
-    text = text.strip("\n"+"="*80+"\n") # strip the === from the ciphertext
+    voucher = r.recvuntil("============\n") # receive and save the ciphertext
+    voucher = voucher.decode("utf-8") # we received raw bytes, interpret it as utf-8 text
+    voucher = voucher.strip("\n"+"="*80+"\n") # strip the === from the ciphertext
+    
+    response = r.recvuntil("> ").decode("utf-8") # till input menu
+    pwn.log.info("response: " + response)
 
-    # recover the key
-    recovered_key = guess_key(text)
-    log.info("Keyguess = " + recovered_key)
+    r.sendline("3") # redeem voucher
+    r.sendline(voucher) # enter voucher
 
-    r.recvuntil("text:\n") # receive the rest of the prompt (one could also use r.recvline() multiple times)
-    r.sendline(recovered_key) # send our recovered key
+    r.sendline("1") # 1
+    r.sendline("1")
 
-    response = r.recvall().decode("utf-8") # get all of the remaining response (this reads until server shuts down)
-    log.info("Server response: " + response) # log the response on the console
+    r.sendline("6") # 6 exit buy menue
 
+    r.sendline("4") # exit
+    response = r.recvall().decode("utf-8")
+    pwn.log.info("response: " + response)
 
-
-
-
-
+    # print(voucher)
 
     return 0
 
